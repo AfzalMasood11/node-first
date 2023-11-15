@@ -20,4 +20,15 @@ const createUser = asyncHandler(
     }
 );
 
-module.exports = { createUser };
+const loginUserCtrl = asyncHandler(
+    async(req, res) => {
+        const {email, password} = req.body;
+        const findUser = await User.findOne({email});
+        if(findUser && (await findUser.isPasswordMatched(password))){
+            res.json(findUser);
+        } else {
+            throw new Error('Invalid credentials');
+        }
+    }
+);
+module.exports = { createUser, loginUserCtrl };
